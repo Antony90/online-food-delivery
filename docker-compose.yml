@@ -1,0 +1,48 @@
+services:
+  # ASP.NET Core Web API
+  api:
+    image: mcr.microsoft.com/dotnet/aspnet:8.0
+    container_name: api
+    build:
+      context: ./API
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development # For swagger UI
+    ports:
+      - "8080:8080"
+    depends_on:
+      - sql-server
+    networks:
+      - app-network
+
+  sql-server:
+      image: mcr.microsoft.com/mssql/server:2022-latest
+      container_name: sql-server
+      ports:
+        - "1433:1433"
+      environment:
+        - ACCEPT_EULA=Y
+        - SA_PASSWORD=passwordA1*
+      volumes:
+        - sql-data:/var/opt/mssql
+      networks:
+        - app-network
+
+
+  web:
+    image: node:22-alpine
+    container_name: react-web
+    build:
+      context: ./Web
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+
+volumes:
+  sql-data:
+
+
+networks:
+  app-network:
