@@ -1,6 +1,10 @@
-# Online Fast Food App
 
-An ASP.NET Core application mimicing the features of Just Eat, the online restaurant and delivery platform.
+<p align="center"> 
+  <img src="img/logo.png" alt="logo" width="125px" height="125px">
+</p>
+<h1 align="center">Online Fast Food App</h1>
+<h3 align="center">An ASP.NET Core application mimicing the features of Just Eat, the online restaurant and delivery platform.</h3>  
+
 
 ## Getting Started
 
@@ -81,10 +85,22 @@ Split into user facing and software implementation features (frameworks used, de
 ### SQL Database Diagram
 
 <p align="center"> 
-  <img src="/img/database.png" alt="logo" width="85px" height="85px">
+  <img src="img/database.png" alt="logo" width="700px">
 </p>
 
 ### API Overview
+
+<p align="center"> 
+  <img src="img/endpoints1.png" alt="logo" width="1000px">
+</p>
+
+<p align="center"> 
+  <img src="img/endpoints2.png" alt="logo" width="1000px">
+</p>
+
+<p align="center"> 
+  <img src="img/endpoints3.png" alt="logo" width="1000px">
+</p>
 
 ### Extra features
 Other interesting features I could add in the future:
