@@ -1,11 +1,17 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+
+using StackExchange.Redis;
+
+
 using OnlineFoodDelivery.Data;
 using OnlineFoodDelivery.Models;
 using OnlineFoodDelivery.Policies;
@@ -16,9 +22,45 @@ using OnlineFoodDelivery.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Config the Redis Cluster
+var redisEndpoints = new List<string> 
+{
+    "redis-master:6379",
+    "redis-replica1:6379",
+    "redis-replica2:6379"
+};
+
+var EndPoints = new EndPointCollection();
+
+foreach (var endpoint in redisEndpoints)
+{
+    EndPoints.Add(endpoint);
+}
+
+var redisConfig = new ConfigurationOptions
+{
+    EndPoints = EndPoints,
+    Password = builder.Configuration["Redis:Password"],
+    AbortOnConnectFail = false,
+    ConnectRetry = 5,
+    ConnectTimeout = 5000,
+    Ssl = false,
+    DefaultDatabase = 0
+};
+
+var redis = ConnectionMultiplexer.Connect(redisConfig);
+builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
+
+// Distributed Cache Registration
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.ConfigurationOptions = redisConfig;
+    options.InstanceName = "FoodDeliveryCache";
+});
+
+
 
 builder.Services.AddControllers();
-
 
 builder.Services.AddEndpointsApiExplorer();
 

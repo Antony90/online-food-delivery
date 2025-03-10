@@ -1,4 +1,32 @@
 services:
+
+  redis-master:
+    image: redis/redis-stack-server:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - redis-network
+    command: redis-server --port 6379 --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000
+
+  redis-replica1:
+    image: redis/redis-stack-server:latest
+    ports:
+      - "6380:6379"
+    networks:
+      - redis-network
+    command: redis-server --port 6379 --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --replicaof redis-master 6379
+
+  redis-replica2:
+    image: redis/redis-stack-server:latest
+    ports:
+      - "6381:6379"
+    networks:
+      - redis-network
+    command: redis-server --port 6379 --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --replicaof redis-master 6379
+
+
   # ASP.NET Core Web API
   api:
     image: mcr.microsoft.com/dotnet/aspnet:8.0
@@ -42,7 +70,10 @@ services:
 
 volumes:
   sql-data:
+  redis-data:
 
 
 networks:
   app-network:
+    redis-network:
+      driver: bridge

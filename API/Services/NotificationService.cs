@@ -10,6 +10,6 @@ public class NotificationService : IEventHandler<OrderCreatedEvent>
     public async Task HandleAsync(OrderCreatedEvent @event)
     {
         await Task.Delay(100);
-        Console.WriteLine($"Notification sent for Order {event.OrderId} to customer {event.CustomerName}");
+        Console.WriteLine($"Notification sent for Order {@event.OrderId} to customer {@event.CustomerName}");
     }
 }
